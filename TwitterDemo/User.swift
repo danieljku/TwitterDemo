@@ -13,6 +13,7 @@ class User: NSObject {
     var screenname: NSString?
     var profileUrl: NSURL?
     var tagline: NSString?
+    var userID: String?
     
     var dictionary: NSDictionary?
     
@@ -27,6 +28,10 @@ class User: NSObject {
         }
         
         tagline = dictionary["description"] as? NSString
+        
+        if let id = dictionary["id_str"] as? String{
+            userID = id
+        }
     }
     
     static var userDidLogoutNotification = "UserDidLogout"

@@ -60,19 +60,40 @@ class TwitterClient: BDBOAuth1SessionManager {
         
     }
     
-//    func updateFavorite(success: @escaping ([Tweet]) -> (), failure: @escaping (NSError) -> ()){
-//        post("1.1/favorites/create.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
-//            do{
-//                
-//            }
-//            
-//        }) { (task: URLSessionDataTask?, error: Error) in
-//            failure(error as NSError)
-//        }
-//    }
+    func retweet(tweet: Tweet, success: @escaping () -> (), failure: @escaping (Error) -> ()){
+        if let tweetID = tweet.tweetID{
+            let action: String = tweet.didRetweet! ? "unretweet" : "retweet"
+            post("1.1/statuses/\(action)/\(tweetID).json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+                
+                success()
+                
+            }) { (task: URLSessionDataTask?, error: Error) in
+                failure(error)
+            }
+        }
+    }
     
-    func homeTimeLine(success: @escaping ([Tweet]) -> (), failure: @escaping (NSError) -> ()){
-        get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+    func favorite(tweet: Tweet, success: @escaping () -> (), failure: @escaping (Error) -> ()){
+        if let tweetID = tweet.tweetID{
+            let action: String = tweet.didFavorite! ? "destroy" : "create"
+            post("1.1/favorites/\(action).json?id=\(tweetID)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+                
+                success()
+
+            }, failure: { (task: URLSessionDataTask?, error: Error) in
+                failure(error)
+            })
+        }
+    }
+    
+    
+    func homeTimeLine(success: @escaping ([Tweet]) -> (), offset: Int?, failure: @escaping (NSError) -> ()){
+        var parameter: [String: AnyObject]?
+        
+        if offset != nil{
+            parameter = ["count": offset as AnyObject]
+        }
+        get("1.1/statuses/home_timeline.json", parameters: parameter, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
             let dictionaries = response as! [NSDictionary]
             let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
             
