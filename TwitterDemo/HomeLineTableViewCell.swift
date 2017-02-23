@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol ProfileTapDelegate: class {
+    func profileTap(_ cell: HomeLineTableViewCell)
+}
+
 class HomeLineTableViewCell: UITableViewCell {
     @IBOutlet weak var profilePhoto: UIImageView!
     @IBOutlet weak var username: UILabel!
@@ -19,6 +23,8 @@ class HomeLineTableViewCell: UITableViewCell {
     @IBOutlet weak var retweetUser: UILabel!
     @IBOutlet weak var retweetUserStackView: UIStackView!
     //@IBOutlet weak var replyCount: UILabel!
+
+    var delegate : ProfileTapDelegate?
 
     var tweet: Tweet!{
         didSet{
@@ -39,6 +45,10 @@ class HomeLineTableViewCell: UITableViewCell {
         }
     }
     
+    func profileTap() {
+        self.delegate?.profileTap(self)
+    }
+    
     @IBAction func onReply(_ sender: Any) {
     }
     
@@ -57,8 +67,18 @@ class HomeLineTableViewCell: UITableViewCell {
             print(error)
         }
     }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        let profileImageTapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(HomeLineTableViewCell.profileTap))
+        self.profilePhoto.addGestureRecognizer(profileImageTapRecognizer)
+        self.profilePhoto.isUserInteractionEnabled = true
+        
+        profilePhoto.layer.cornerRadius = 3
+        profilePhoto.clipsToBounds = true
+        // Do any additional setup after loading the view.
+        
         // Initialization code
     }
 

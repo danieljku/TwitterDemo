@@ -41,6 +41,18 @@ class TwitterClient: BDBOAuth1SessionManager {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userDidLogoutNotification), object: nil)
     }
     
+    func currentAccount(success: @escaping (User) -> (), failure: @escaping (NSError) -> ()){
+        get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            let userDictionary = response as! NSDictionary
+            let user = User(dictionary: userDictionary)
+            
+            success(user)
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error) in
+            failure(error as NSError)
+        })
+    }
+    
     func handleOpenUrl(url: NSURL){
         let requestToken = BDBOAuth1Credential(queryString: url.query)
         fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) in
@@ -86,6 +98,14 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
     }
     
+    func postTweet(text: String, success: @escaping () -> (), failure: @escaping (Error) -> ()){
+        post("1.1/statuses/update.json?status=\(text)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            success()
+        }) { (task: URLSessionDataTask?, error: Error) in
+            failure(error)
+        }
+    }
+    
     
     func homeTimeLine(success: @escaping ([Tweet]) -> (), offset: Int?, failure: @escaping (NSError) -> ()){
         var parameter: [String: AnyObject]?
@@ -104,15 +124,5 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func currentAccount(success: @escaping (User) -> (), failure: @escaping (NSError) -> ()){
-        get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
-            let userDictionary = response as! NSDictionary
-            let user = User(dictionary: userDictionary)
-            
-            success(user)
-            
-        }, failure: { (task: URLSessionDataTask?, error: Error) in
-            failure(error as NSError)
-        })
-    }
+
 }

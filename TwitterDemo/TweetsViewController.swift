@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
+class TweetsViewController: UIViewController, UITableViewDelegate, ProfileTapDelegate, UITableViewDataSource, UIScrollViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
     var tweets: [Tweet]!
@@ -20,6 +20,14 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        let titleView = UIImageView(image: #imageLiteral(resourceName: "TwitterLogoBlue"))
+        titleView.frame.size = CGSize(width: 40, height: 40)
+        titleView.contentMode = .scaleAspectFit
+        self.navigationItem.titleView = titleView
+        
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 160
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
@@ -44,6 +52,8 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print(error.localizedDescription)
         })
         // Do any additional setup after loading the view.
+        
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -68,6 +78,15 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func profileTap(_ cell: HomeLineTableViewCell) {
+        let profileVC = self.storyboard!.instantiateViewController(withIdentifier: "profileView") as! ProfileViewController
+        let indexPath = tableView.indexPath(for: cell)
+        
+        let tweet = tweets![indexPath!.row]
+        profileVC.user = tweet.tweetUser
+        self.navigationController!.pushViewController(profileVC, animated: true)
     }
     
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
@@ -114,6 +133,14 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBAction func onLogoutButton(_ sender: Any) {
         TwitterClient.sharedInstance?.logout()
+    }
+    
+    @IBAction func composeTweet(_ sender: Any) {
+        let composeVC = self.storyboard!.instantiateViewController(withIdentifier: "composeTweet") as! ComposeTweetViewController
+        
+        
+        self.present(composeVC, animated: true, completion: nil)
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

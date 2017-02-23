@@ -15,11 +15,19 @@ class TweetDetailViewController: UIViewController {
     @IBOutlet weak var retweetCount: UILabel!
     @IBOutlet weak var likesCount: UILabel!
     @IBOutlet weak var screenName: UILabel!
+    @IBOutlet weak var tweetDate: UILabel!
 
     var tweet: Tweet?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.backItem?.title = ""
+        
+        //        self.navigationItem.hidesBackButton = true
+        
+        profileImage.layer.cornerRadius = 3
+        profileImage.clipsToBounds = true
         
         profileImage.setImageWith((tweet?.profilePhotoUrl)!)
         username.text = tweet?.username
@@ -27,7 +35,7 @@ class TweetDetailViewController: UIViewController {
         retweetCount.text = String(describing: (tweet?.retweetCount)!)
         likesCount.text = String(describing: (tweet?.favoritesCount)!)
         screenName.text = "@\((tweet?.screenName)!)"
-        
+        tweetDate.text = tweet?.timestamp
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(TweetDetailViewController.imageTapped))
         self.profileImage.addGestureRecognizer(tapRecognizer)
@@ -36,8 +44,9 @@ class TweetDetailViewController: UIViewController {
     }
     
     func imageTapped(gestureRecognizer: UITapGestureRecognizer) {
-        let profileVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "profileView") as! ProfileViewController
-        self.present(profileVC, animated: true, completion: nil)
+        let profileVC = self.storyboard!.instantiateViewController(withIdentifier: "profileView") as! ProfileViewController
+        profileVC.user = tweet?.tweetUser
+        self.navigationController!.pushViewController(profileVC, animated: true)
     }
 
     override func didReceiveMemoryWarning() {

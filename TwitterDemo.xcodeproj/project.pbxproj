@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C907386625EBC910E4B5150 /* Pods_TwitterDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CC1CB6D2446410BF4CB8C11 /* Pods_TwitterDemo.framework */; };
+		12139DEE1E5EBBDC00AAAFC1 /* ComposeTweetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12139DED1E5EBBDC00AAAFC1 /* ComposeTweetViewController.swift */; };
 		1295A3F41E5AC44800AB8F64 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1295A3F31E5AC44800AB8F64 /* ProfileViewController.swift */; };
 		12A013841E5BD06800B23472 /* InfiniteScrollActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A013831E5BD06800B23472 /* InfiniteScrollActivityView.swift */; };
 		12AE77341E3C4A300014135D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12AE77331E3C4A300014135D /* AppDelegate.swift */; };
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		0CC1CB6D2446410BF4CB8C11 /* Pods_TwitterDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwitterDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		12139DED1E5EBBDC00AAAFC1 /* ComposeTweetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeTweetViewController.swift; sourceTree = "<group>"; };
 		1295A3F31E5AC44800AB8F64 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		12A013831E5BD06800B23472 /* InfiniteScrollActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteScrollActivityView.swift; sourceTree = "<group>"; };
 		12AE77301E3C4A300014135D /* TwitterDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +108,7 @@
 				12C74BE61E44D116009E1540 /* TweetsViewController.swift */,
 				12D56ADD1E53E59400352210 /* TweetDetailViewController.swift */,
 				1295A3F31E5AC44800AB8F64 /* ProfileViewController.swift */,
+				12139DED1E5EBBDC00AAAFC1 /* ComposeTweetViewController.swift */,
 			);
 			name = "VIew Controllers";
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				12D56ADE1E53E59400352210 /* TweetDetailViewController.swift in Sources */,
 				1295A3F41E5AC44800AB8F64 /* ProfileViewController.swift in Sources */,
 				12C74BE11E44C594009E1540 /* User.swift in Sources */,
+				12139DEE1E5EBBDC00AAAFC1 /* ComposeTweetViewController.swift in Sources */,
 				12C74BE31E44C59F009E1540 /* Tweet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

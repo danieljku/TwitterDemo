@@ -14,14 +14,50 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var followingCount: UILabel!
     @IBOutlet weak var followersCount: UILabel!
-    @IBOutlet weak var tweetsCount: UILabel!
+    @IBOutlet weak var profileDescription: UILabel!
+    @IBOutlet weak var screenName: UILabel!
+    @IBOutlet weak var followButton: UIButton!
+    
+    var user: User?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-
+        //followButton.layer.borderColor = UIColor
         // Do any additional setup after loading the view.
+        profilePhotoImage.layer.cornerRadius = 4
+        profilePhotoImage.clipsToBounds = true
+        profilePhotoImage.layer.borderWidth = 3
+        profilePhotoImage.layer.borderColor = UIColor.white.cgColor
+        
+        coverPhotoImage.setImageWith((user?.coverPhotoUrl)!)
+        profilePhotoImage.setImageWith((user?.profileUrl)!)
+        username.text = user?.name
+        
+        var following = Double((user?.following)!)
+        if following > 1000 && following < 1000000{
+            following = following/1000.00
+            followingCount.text = String(format: "%.1f K", following)
+        }else if following > 1000000{
+            following = following/1000000
+            followingCount.text = String(format: "%.1f M", following)
+        }else{
+            followingCount.text = String(Int(following))
+        }
+        
+        var followers = Double((user?.followers)!)
+        if followers > 1000 && followers < 1000000{
+            followers = followers/1000.00
+            followersCount.text = String(format: "%.1f K", followers)
+        }else if followers > 1000000{
+            followers = followers/1000000
+            followersCount.text = String(format: "%.1f M", followers)
+        }else{
+            followersCount.text = String(Int(followers))
+        }
+
+        profileDescription.text = user?.tagline
+        screenName.text = "@\((user?.screenname)!)"
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,15 +65,8 @@ class ProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func followButton(_ sender: Any) {
     }
-    */
+
 
 }
