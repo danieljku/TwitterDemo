@@ -21,7 +21,7 @@ class HomeLineTableViewCell: UITableViewCell {
     @IBOutlet weak var favoriteCount: UILabel!
     @IBOutlet weak var screenName: UILabel!
     @IBOutlet weak var retweetUser: UILabel!
-    @IBOutlet weak var retweetUserStackView: UIStackView!
+    @IBOutlet weak var retweetImage: UIImageView!
     //@IBOutlet weak var replyCount: UILabel!
 
     var delegate : ProfileTapDelegate?
@@ -36,10 +36,11 @@ class HomeLineTableViewCell: UITableViewCell {
             favoriteCount.text = String(tweet.favoritesCount!)
             screenName.text = "@\(tweet.screenName!)"
             if tweet.retweetedUsername == nil{
-                retweetUserStackView.isHidden = true
-                retweetUser.numberOfLines = 0
+                retweetUser.isHidden = true
+                retweetImage.isHidden = true
             }else{
-                retweetUserStackView.isHidden = false
+                retweetUser.isHidden = false
+                retweetImage.isHidden = false
                 retweetUser.text = "\((tweet.retweetedUsername)!) Retweeted"
             }
         }

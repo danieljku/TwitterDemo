@@ -36,7 +36,7 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
-                        <segue destination="zzG-Ry-8He" kind="modal" identifier="loginSegue" id="0Zo-yq-Jx4"/>
+                        <segue destination="zzG-Ry-8He" kind="show" identifier="loginSegue" id="0Zo-yq-Jx4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -197,8 +197,8 @@
                                             <outlet property="favoriteCount" destination="NSl-73-lzU" id="xjY-wD-GTu"/>
                                             <outlet property="profilePhoto" destination="rAW-be-q4O" id="rLF-eF-WtR"/>
                                             <outlet property="retweetCount" destination="Zzb-9b-1ga" id="6pw-Gj-NaU"/>
+                                            <outlet property="retweetImage" destination="MXd-CG-xN0" id="DC7-87-gpN"/>
                                             <outlet property="retweetUser" destination="uBf-h6-pwx" id="NIl-OG-KTu"/>
-                                            <outlet property="retweetUserStackView" destination="2HT-D9-Wnj" id="ezn-g5-8X5"/>
                                             <outlet property="screenName" destination="3jY-SJ-4jF" id="sXh-aG-CNF"/>
                                             <outlet property="timeStamp" destination="mfu-6T-N7y" id="04B-T6-t0M"/>
                                             <outlet property="tweetText" destination="yAx-cK-6OY" id="7tf-jW-myr"/>
@@ -417,7 +417,7 @@
                                 <rect key="frame" x="0.0" y="345.5" width="375" height="321.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="76" id="hmK-Is-KqU">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="myTweet" rowHeight="76" id="hmK-Is-KqU">
                                         <rect key="frame" x="0.0" y="28" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hmK-Is-KqU" id="vbq-y7-aDd">
@@ -555,7 +555,8 @@
             <objects>
                 <navigationController storyboardIdentifier="TweetsNavController" automaticallyAdjustsScrollViewInsets="NO" id="zzG-Ry-8He" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="UCA-3T-wa9">
+                    <navigationItem key="navigationItem" id="G6C-cm-37j"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UCA-3T-wa9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
