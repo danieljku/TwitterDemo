@@ -16,6 +16,8 @@ class TweetDetailViewController: UIViewController {
     @IBOutlet weak var likesCount: UILabel!
     @IBOutlet weak var screenName: UILabel!
     @IBOutlet weak var tweetDate: UILabel!
+    @IBOutlet weak var retweetButton: UIButton!
+    @IBOutlet weak var favoriteButton: UIButton!
 
     var tweet: Tweet?
     
@@ -36,6 +38,18 @@ class TweetDetailViewController: UIViewController {
         likesCount.text = String(describing: (tweet?.favoritesCount)!)
         screenName.text = "@\((tweet?.screenName)!)"
         tweetDate.text = tweet?.timestamp
+        
+        if self.tweet?.didRetweet == false{
+            self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon"), for: .normal)
+        }else{
+            self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon-green"), for: .normal)
+        }
+        
+        if self.tweet?.didFavorite == false{
+            self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon"), for: .normal)
+        }else{
+            self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
+        }
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(TweetDetailViewController.imageTapped))
         self.profileImage.addGestureRecognizer(tapRecognizer)
@@ -58,9 +72,29 @@ class TweetDetailViewController: UIViewController {
     }
 
     @IBAction func retweetButton(_ sender: Any) {
+        self.tweet?.updateRetweet(success: {
+            if self.tweet?.didRetweet == false{
+                self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon"), for: .normal)
+            }else{
+                self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon-green"), for: .normal)
+            }
+            self.retweetCount.text = "\((self.tweet?.retweetCount!)!)"
+        }, failure: { (error: Error) in
+            print(error.localizedDescription)
+        })
     }
 
     @IBAction func favoriteButton(_ sender: Any) {
+        self.tweet?.updateFavorite(success: {
+            if self.tweet?.didFavorite == false{
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon"), for: .normal)
+            }else{
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
+            }
+            self.likesCount.text = "\((self.tweet?.favoritesCount!)!)"
+        }) { (error: Error) in
+            print(error)
+        }
     }
     
 }

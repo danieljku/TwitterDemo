@@ -21,7 +21,7 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func onLoginButton(_ sender: Any) {        
+    @IBAction func onLoginButton(_ sender: Any) {
         TwitterClient.sharedInstance?.login(success: {
             print("I've logged in!")
             

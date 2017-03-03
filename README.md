@@ -77,7 +77,7 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-- [ ] When composing, you should have a countdown in the upper right for the tweet limit.
+- [X] When composing, you should have a countdown in the upper right for the tweet limit.
 - [ ] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
 - [ ] Profile Page
    - [X] Implement the paging view for the user description.
@@ -93,7 +93,8 @@ The following **additional** features are implemented:
 
 - [X] Resize tableView based on size of content.
 - [X] Tapping on profile picture in details also links to profile.
-- [X] Make compose tweet modally
+- [X] Make compose tweet modally.
+- [X] Color of retweet and favorite button change if it was retweeted or favorited.
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 

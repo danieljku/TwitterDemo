@@ -8,9 +8,10 @@
 
 import UIKit
 
-class ComposeTweetViewController: UIViewController, UITextViewDelegate {
+class ComposeTweetViewController: UIViewController{
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var tweetText: UITextView!
+    @IBOutlet weak var tweetCount: UILabel!
 
     var user: User?
     
@@ -32,23 +33,11 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        tweetText.text = ""
-        tweetText.textColor = UIColor.black
-    }
-    
     @IBAction func closeComposeTweet(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
 
     @IBAction func sendTweet(_ sender: Any) {
-//        if tweetText.text == nil{
-//            let textCheckAlert: UIAlertController = UIAlertController(title: "Text Check", message: "You didn't enter in a tweet!", preferredStyle: .alert)
-//            let cancelAction = UIAlertAction(title: "OK",style: .cancel, handler: nil)
-//            textCheckAlert.addAction(cancelAction)
-//            self.present(textCheckAlert, animated: true, completion: nil)
-//        }
-        
         if let tweetText = tweetText.text{
             TwitterClient.sharedInstance?.postTweet(text: tweetText, success: {
                 self.dismiss(animated: true, completion: nil)
@@ -56,5 +45,18 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
                 print(error.localizedDescription)
             })
         }
+    }
+}
+extension ComposeTweetViewController: UITextViewDelegate{
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        tweetCount.text = "\(140 - newText.characters.count)"
+        let numberOfChars = newText.characters.count
+        return numberOfChars < 140;
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        tweetText.text = ""
+        tweetText.textColor = UIColor.black
     }
 }

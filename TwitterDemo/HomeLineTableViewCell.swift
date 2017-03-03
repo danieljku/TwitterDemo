@@ -9,11 +9,17 @@
 import UIKit
 
 protocol ProfileTapDelegate: class {
-    func profileTap(_ cell: HomeLineTableViewCell)
+    func profileTapped(_ cell: HomeLineTableViewCell, user: User)
 }
 
 class HomeLineTableViewCell: UITableViewCell {
-    @IBOutlet weak var profilePhoto: UIImageView!
+    @IBOutlet weak var profilePhoto: UIImageView!{
+        didSet{
+            let profileImageTapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileTap(_:)))
+            self.profilePhoto.addGestureRecognizer(profileImageTapRecognizer)
+            self.profilePhoto.isUserInteractionEnabled = true
+        }
+    }
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var tweetText: UILabel!
     @IBOutlet weak var timeStamp: UILabel!
@@ -22,9 +28,11 @@ class HomeLineTableViewCell: UITableViewCell {
     @IBOutlet weak var screenName: UILabel!
     @IBOutlet weak var retweetUser: UILabel!
     @IBOutlet weak var retweetImage: UIImageView!
+    @IBOutlet weak var retweetButton: UIButton!
+    @IBOutlet weak var favoriteButton: UIButton!
     //@IBOutlet weak var replyCount: UILabel!
 
-    var delegate : ProfileTapDelegate?
+    weak var delegate : ProfileTapDelegate?
 
     var tweet: Tweet!{
         didSet{
@@ -46,8 +54,8 @@ class HomeLineTableViewCell: UITableViewCell {
         }
     }
     
-    func profileTap() {
-        self.delegate?.profileTap(self)
+    func profileTap(_ gesture: UITapGestureRecognizer) {
+        self.delegate?.profileTapped(self, user: tweet.tweetUser!)
     }
     
     @IBAction func onReply(_ sender: Any) {
@@ -55,6 +63,11 @@ class HomeLineTableViewCell: UITableViewCell {
     
     @IBAction func onRetweet(_ sender: Any) {
         self.tweet.updateRetweet(success: {
+            if self.tweet.didRetweet == false{
+                self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon"), for: .normal)
+            }else{
+                self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon-green"), for: .normal)
+            }
             self.retweetCount.text = "\(self.tweet.retweetCount!)"
         }, failure: { (error: Error) in
             print(error.localizedDescription)
@@ -62,7 +75,12 @@ class HomeLineTableViewCell: UITableViewCell {
     }
     
     @IBAction func onFavorite(_ sender: Any) {
-        self.tweet.updateFavorite(success: { 
+        self.tweet.updateFavorite(success: {
+            if self.tweet.didFavorite == false{
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon"), for: .normal)
+            }else{
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
+            }
             self.favoriteCount.text = "\(self.tweet.favoritesCount!)"
         }) { (error: Error) in
             print(error)
@@ -71,10 +89,6 @@ class HomeLineTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        let profileImageTapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(HomeLineTableViewCell.profileTap))
-        self.profilePhoto.addGestureRecognizer(profileImageTapRecognizer)
-        self.profilePhoto.isUserInteractionEnabled = true
         
         profilePhoto.layer.cornerRadius = 3
         profilePhoto.clipsToBounds = true

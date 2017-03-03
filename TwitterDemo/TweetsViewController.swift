@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDelegate, ProfileTapDelegate, UITableViewDataSource, UIScrollViewDelegate {
+class TweetsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var tweets: [Tweet]!
@@ -56,39 +56,12 @@ class TweetsViewController: UIViewController, UITableViewDelegate, ProfileTapDel
         
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let tweets = tweets{
-            return tweets.count
-        }else{
-            return 0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "homeLineCell", for: indexPath) as! HomeLineTableViewCell
-        let tweet = tweets[indexPath.row]
-        
-        cell.tweet = tweet
-        
-        cell.selectionStyle = .none
-        
-        return cell
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    func profileTap(_ cell: HomeLineTableViewCell) {
-        let profileVC = self.storyboard!.instantiateViewController(withIdentifier: "profileView") as! ProfileViewController
-        let indexPath = tableView.indexPath(for: cell)
-        
-        let tweet = tweets![indexPath!.row]
-        profileVC.user = tweet.tweetUser
-        self.navigationController!.pushViewController(profileVC, animated: true)
-    }
-    
+
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
         TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) in
             self.tweets = tweets
@@ -99,36 +72,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, ProfileTapDel
         }, offset: nil, failure: { (error: NSError) in
             print(error.localizedDescription)
         })
-        
-
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (!isMoreDataLoading) {
-            // Calculate the position of one screen length before the bottom of the results
-            let scrollViewContentHeight = tableView.contentSize.height
-            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
-            
-            // When the user has scrolled past the threshold, start requesting
-            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
-                
-                isMoreDataLoading = true
-                
-                // Code to load more results
-                loadingMoreView!.startAnimating()
-
-                TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) in
-                    self.tweets.append(contentsOf: tweets)
-                    
-                    self.isMoreDataLoading = false
-                    self.loadingMoreView!.stopAnimating()
-
-                    self.tableView.reloadData()
-                },offset: tweets.count, failure: { (error: NSError) in
-                    print(error.localizedDescription)
-                })
-            }
-        }
     }
     
     @IBAction func onLogoutButton(_ sender: Any) {
@@ -137,8 +80,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, ProfileTapDel
     
     @IBAction func composeTweet(_ sender: Any) {
         let composeVC = self.storyboard!.instantiateViewController(withIdentifier: "composeTweet") as! ComposeTweetViewController
-        
-        
         self.present(composeVC, animated: true, completion: nil)
         
     }
@@ -153,6 +94,63 @@ class TweetsViewController: UIViewController, UITableViewDelegate, ProfileTapDel
             tweetDetailVC.tweet = tweet
         }
     }
+}
 
+extension TweetsViewController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let tweets = tweets{
+            return tweets.count
+        }else{
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "homeLineCell", for: indexPath) as! HomeLineTableViewCell
+        let tweet = tweets[indexPath.row]
+        cell.delegate = self
+        cell.tweet = tweet
+        
+        cell.selectionStyle = .none
+        
+        return cell
+    }
+}
 
+extension TweetsViewController: UIScrollViewDelegate{
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (!isMoreDataLoading) {
+            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            // When the user has scrolled past the threshold, start requesting
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+                
+                isMoreDataLoading = true
+                
+                // Code to load more results
+                loadingMoreView!.startAnimating()
+                
+                TwitterClient.sharedInstance?.homeTimeLine(success: { (tweets: [Tweet]) in
+                    self.tweets.append(contentsOf: tweets)
+                    
+                    self.isMoreDataLoading = false
+                    self.loadingMoreView!.stopAnimating()
+                    
+                    self.tableView.reloadData()
+                },offset: tweets.count, failure: { (error: NSError) in
+                    print(error.localizedDescription)
+                })
+            }
+        }
+    }
+}
+
+extension TweetsViewController: ProfileTapDelegate{
+    func profileTapped(_ cell: HomeLineTableViewCell, user: User) {
+        let profileVC = self.storyboard!.instantiateViewController(withIdentifier: "profileView") as! ProfileViewController
+        profileVC.user = user
+        self.navigationController!.pushViewController(profileVC, animated: true)
+    }
 }
